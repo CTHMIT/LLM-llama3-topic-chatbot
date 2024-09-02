@@ -44,6 +44,11 @@ To get started, you'll need to download Ollama. You have two options:
    ```bash
    conda env create -f environment.yml
    ```
+6. Run the python file to Serving Flask app
+   ```bash
+   python app.py
+   ```
+   
 ## File Structure
 - app.py: The main Flask application containing all routes and logic.
 - templates/: Contains HTML templates for the web interface
