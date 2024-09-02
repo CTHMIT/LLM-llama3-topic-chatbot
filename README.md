@@ -43,8 +43,13 @@ To get started, you'll need to download Ollama. You have two options:
 
 ## Customization
 - Change the LLM:
-  The chatbot uses the LLaMA 3 model by default. You can modify the model in app.py by changing the OllamaLLM(model="llama3") to another model.
+  The chatbot uses the LLaMA 3 model by default.
+  You can modify the model in app.py by changing the OllamaLLM(model="llama3") to another model.
 - Adjust the Text Splitter:
   You can customize how the Wikipedia content is split into chunks for indexing by modifying the RecursiveCharacterTextSplitter parameters.
 - Configure the Vector Store:
   The Chroma vector store can be configured to change the embedding model or persistence directory.
+
+## Troubleshooting
+Wikipedia Page Errors: If the application encounters a disambiguation page or the page doesn’t exist, the user is prompted to choose another topic or re-enter the query.
+Session Errors: Ensure that the secret_key is set in the Flask app to avoid session-related errors.
