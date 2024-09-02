@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ topic }} - Chatbot</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .chat-box {
+            width: 90%;
+            max-width: 1200px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 50px;
+            display: flex;
+            height: 90vh;
+            max-height: 90vh;
+            box-sizing: border-box;
+            position: relative;
+            gap: 20px;
+        }
+        .header {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 10;
+        }
+        .topic-selection {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .chat-history {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            flex-basis: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-history pre {
+            margin: 5px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .response-window {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #eef6ff;
+            flex-basis: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .response-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        .response-window pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+            flex-grow: 1;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .quick-questions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .quick-questions button {
+            flex-grow: 1;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        .quick-questions button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        function scrollToBottom() {
+            var chatHistory = document.querySelector('.chat-history');
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+        window.onload = scrollToBottom;
+        window.addEventListener('load', scrollToBottom);
+    </script>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box">
+            <div class="header">{{ topic }}</div>
+
+            <div class="topic-selection">
+                <form method="POST">
+                    <button name="change_topic" value="true">Change Topic</button>
+                </form>
+                <form action="{{ url_for('end_session') }}">
+                    <button type="submit">End Session</button>
+                </form>
+            </div>
+
+            <div class="chat-history">
+                {% if chat_history %}
+                    <pre>{{ chat_history }}</pre>
+                {% endif %}
+            </div>
+
+            <div class="response-window">
+                <div class="response-content">
+                    {% if response %}
+                        <pre>{{ response }}</pre>
+                    {% endif %}
+                </div>
+
+                <form method="POST" class="input-group">
+                    <input type="text" id="question" name="question" placeholder="Ask your question..." required>
+                    <button type="submit">Submit</button>
+                </form>
+
+                <div class="quick-questions">
+                    <form method="POST">
+                        <button name="question" value="What are the symptoms of {{ topic }}?">Symptoms</button>
+                        <button name="question" value="What are the causes of {{ topic }}?">Causes</button>
+                        <button name="question" value="How to treat {{ topic }}?">Treatment</button>
+                        <button name="question" value="What is the {{ topic }}?">{{topic}}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

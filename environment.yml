@@ -1,0 +1,17 @@
+name: chatbot
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - flask
+      - langchain
+      - langchain_community
+      - beautifulsoup4
+      - jinja2
+      - langchain_ollama
+      - wikipedia
+      - sentence-transformers
+      - chromadb
+      - langchain_huggingface
