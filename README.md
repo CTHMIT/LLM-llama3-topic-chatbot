@@ -4,6 +4,14 @@ Build a topic-specific chatbot using LLM and run it on a website.
 With memory, make the LLM check before chat history,
 and use RAG to check the topic information.
 
+## Usage
+- Select a Topic: On the homepage, enter a topic you're interested in. The application will search Wikipedia and return the most relevant result.
+- Chroma Vector Store: The content from Wikipedia is indexed using Chroma and stored as vectors for efficient retrieval.
+- LLM-Powered Responses: The chatbot leverages the Ollama LLM (specifically the LLaMA 3 model) to generate responses based on the retrieved Wikipedia content.
+- Chat with the Bot: After selecting a topic, you can start asking questions. The bot will use Wikipedia content and the LLaMA 3 model to generate responses.
+- Review Chat History: The chat history is displayed during your conversation and stored locally for later reference.
+- End Session: You can clear the session and select a new topic at any time.
+
 ## Prerequisites
 
 - **Environment**: Anaconda
@@ -53,3 +61,12 @@ To get started, you'll need to download Ollama. You have two options:
 ## Troubleshooting
 Wikipedia Page Errors: If the application encounters a disambiguation page or the page doesn’t exist, the user is prompted to choose another topic or re-enter the query.
 Session Errors: Ensure that the secret_key is set in the Flask app to avoid session-related errors.
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/CTHMIT/LLM-llama3-topic-chatbot/blob/main/LICENSE) file for more details.
+
+Acknowledgments
+- Flask
+- LangChain
+- Chroma
+- Wikipedia
