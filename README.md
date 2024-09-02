@@ -7,7 +7,7 @@ and use RAG to check the topic information.
 ## Prerequisites
 
 - **Environment**: Anaconda
-- **Python >= 3.10
+- **Python** >= 3.10
 - **Search API**: Wikipedia
 - **Libraries**: LangChain
 - **LLM**: Ollama
@@ -36,3 +36,15 @@ To get started, you'll need to download Ollama. You have two options:
    ```bash
    conda env create -f environment.yml
    ```
+## File Structure
+- app.py: The main Flask application containing all routes and logic.
+- templates/: Contains HTML templates for the web interface
+- db/: The directory where Chroma stores the vectorized Wikipedia content.
+
+## Customization
+- Change the LLM:
+  The chatbot uses the LLaMA 3 model by default. You can modify the model in app.py by changing the OllamaLLM(model="llama3") to another model.
+- Adjust the Text Splitter:
+  You can customize how the Wikipedia content is split into chunks for indexing by modifying the RecursiveCharacterTextSplitter parameters.
+- Configure the Vector Store:
+  The Chroma vector store can be configured to change the embedding model or persistence directory.
