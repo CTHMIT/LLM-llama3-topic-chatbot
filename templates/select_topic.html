@@ -5,29 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Topic</title>
     <style>
-        body, html {
+        body,
+        html {
             height: 100%;
             margin: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
             font-family: Arial, sans-serif;
             background-color: #f7f7f7;
+            flex-direction: row;
         }
+
+        .sidebar {
+            width: 30%; 
+            background-color: #343a40;
+            padding: 20px;
+            color: white;
+            height: 100vh; 
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .topic-button {
+            margin: 10px 0;
+            padding: 20px; 
+            border-radius: 5px;
+            background-color: #495057;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        .sidebar .topic-button:hover {
+            background-color: #6c757d;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 80px 40px; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            height: 100vh; 
+            box-sizing: border-box;
+        }
+
         .container {
             text-align: center;
-            padding: 20px;
+            padding: 140px; 
             background-color: white;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            box-sizing: border-box;
         }
+
         input[type="text"] {
-            width: 90%;
+            width: 100%;
             padding: 10px;
             margin-top: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            box-sizing: border-box;
         }
+
         button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -37,16 +85,21 @@
             color: white;
             font-size: 16px;
             cursor: pointer;
+            box-sizing: border-box;
         }
-        button:hover {
-            background-color: #0056b3;
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
+
         .suggestions {
             margin-top: 20px;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
         }
+
         .suggestion {
             margin: 5px;
             padding: 10px;
@@ -54,41 +107,146 @@
             background-color: #e9ecef;
             cursor: pointer;
             font-size: 14px;
-            width: 200px;
             text-align: center;
+            word-wrap: break-word;
         }
+
         .suggestion:hover {
             background-color: #dee2e6;
         }
+
         .error {
             color: red;
             margin-top: 10px;
         }
+
+        .record-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .record-button:hover {
+            background-color: #218838;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        #disease-list {
+            margin-top: 20px;
+        }
+
+        #disease-list select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Select a Topic for the Chatbot</h1>
-        <form method="POST">
-            <label for="topic">Enter Topic:</label><br>
-            <input type="text" id="topic" name="topic" required><br>
-            <button type="submit">Submit</button>
-        </form>
 
-        {% if suggestions %}
-        <div class="error">No exact match found. Please select one of the suggestions or re-enter your topic:</div>
-        <div class="suggestions">
-            {% for suggestion in suggestions %}
-            <div class="suggestion" onclick="selectSuggestion('{{ suggestion }}')">{{ suggestion }}</div>
+<body>
+    <div class="sidebar">
+        <h2>Saved Topics</h2>
+        {% if saved_topics %}
+            {% for topic in saved_topics %}
+                <div class="topic-button" onclick="selectSavedTopic('{{ topic }}')">{{ topic }}</div>
             {% endfor %}
-        </div>
+        {% else %}
+            <p>No saved topics.</p>
         {% endif %}
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h1>Select a Topic for the Chatbot</h1>
+            <form method="POST" id="topic-form">
+                <label for="topic">Enter Topic:</label><br>
+                <div class="button-group">
+                    <input type="text" id="topic" name="topic" required>
+                    {% if record_exists %}
+                    <button type="button" class="record-button" onclick="viewRecord()">View Record</button>
+                    {% endif %}
+                </div>
+                <button type="submit" id="submit-button">Submit</button>
+            </form>
+
+            <div id="disease-list" style="display: none;">
+                <h3>Select a Disease:</h3>
+                <select id="disease-select" name="selected_disease" required>
+                </select>
+                <button id="disease-submit" onclick="submitDisease()" disabled>Submit</button>
+            </div>
+
+            {% if suggestions %}
+            <div class="error">No exact match found. Please select one of the suggestions or re-enter your topic:</div>
+            <div class="suggestions">
+                {% for suggestion in suggestions %}
+                <div class="suggestion" onclick="selectSuggestion('{{ suggestion }}')">{{ suggestion }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
     </div>
 
     <script>
         function selectSuggestion(suggestion) {
             document.getElementById('topic').value = suggestion;
         }
+
+        function selectSavedTopic(topic) {
+            document.getElementById('topic').value = topic;
+            document.forms[0].submit(); 
+        }
+
+        function viewRecord() {
+            window.location.href = "/view_record";
+        }
+
+        document.getElementById('topic').addEventListener('input', function() {
+            if (this.value.toLowerCase() === 'disease') {
+                fetchDiseases();
+            } else {
+                document.getElementById('disease-list').style.display = 'none';
+                document.getElementById('submit-button').disabled = false;
+            }
+        });
+
+        function fetchDiseases() {
+            fetch('/fetch_diseases')
+                .then(response => response.json())
+                .then(diseases => {
+                    const diseaseSelect = document.getElementById('disease-select');
+                    diseaseSelect.innerHTML = diseases.map(disease => `<option value="${disease}">${disease}</option>`).join('');
+                    document.getElementById('disease-list').style.display = 'block';
+                    document.getElementById('submit-button').disabled = true;
+                });
+        }
+
+        document.getElementById('disease-select').addEventListener('change', function() {
+            document.getElementById('disease-submit').disabled = this.value === "";
+        });
+
+        function submitDisease() {
+            const selectedDisease = document.getElementById('disease-select').value;
+            document.getElementById('topic').value = selectedDisease;
+            document.getElementById('submit-button').disabled = false;
+            document.forms[0].submit();
+        }
     </script>
 </body>
+
 </html>
