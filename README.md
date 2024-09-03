@@ -6,9 +6,11 @@ and use RAG to check the topic information.
 
 ## Usage
 - Select a Topic: On the homepage, enter a topic you're interested in. The application will search Wikipedia and return the most relevant result.
+![image](https://github.com/user-attachments/assets/ab68fa02-6bae-486d-b30d-c8ad62e19917)
 - Chroma Vector Store: The content from Wikipedia is indexed using Chroma and stored as vectors for efficient retrieval.
 - LLM-Powered Responses: The chatbot leverages the Ollama LLM (specifically the LLaMA 3 model) to generate responses based on the retrieved Wikipedia content.
 - Chat with the Bot: After selecting a topic, you can start asking questions. The bot will use Wikipedia content and the LLaMA 3 model to generate responses.
+![image](https://github.com/user-attachments/assets/f1cf1a69-54f8-409f-b100-14272b80adcb)
 - Review Chat History: The chat history is displayed during your conversation and stored locally for later reference.
 - End Session: You can clear the session and select a new topic at any time.
 
