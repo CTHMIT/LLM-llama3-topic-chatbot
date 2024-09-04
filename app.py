@@ -144,7 +144,7 @@ def chat():
         chat_entry = f"User Question: {question}\nThe Answer: {response}"
         chat_information = f"You: {question}\n\nChatbot: {response}"
         chat_history += "\n" + chat_entry
-        save_chat_history(chat_entry, CHAT_HISTORY_FILE)
+        save_chat_history(chat_history, CHAT_HISTORY_FILE)
 
     return render_template("chat.html", response=chat_information, topic=topic, chat_history=chat_history, link=link)
 
