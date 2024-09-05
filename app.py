@@ -41,13 +41,18 @@ def create_chroma_index(document_text, topic):
     retriever_store[topic] = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 5})
 
 def find_best_matching_topic(user_input):
-    search_results = wikipedia.search(user_input, results=5)
-    if search_results:
-        best_match = search_results[0]
-        page = wikipedia.page(best_match)
-        if page:
-            return best_match, page.summary, page.url
-    return None, None, None
+    try:
+        search_results = wikipedia.search(user_input, results=5)
+        if search_results:
+            best_match = search_results[0]
+            page = wikipedia.page(best_match)
+            if page:
+                return best_match, page.summary, page.url, None
+
+    except wikipedia.exceptions.DisambiguationError as e:
+        return None, None, None, e.options  
+
+    return None, None, None, None
 
 @app.route("/", methods=["GET", "POST"])
 def select_topic():
@@ -69,7 +74,7 @@ def select_topic():
         
         CHAT_HISTORY_FILE = os.path.join(CHAT_HISTORY_PATH, f"{base_topic}_chat_history.txt")
 
-        best_match, summary, link = find_best_matching_topic(user_input)
+        best_match, summary, link, suggestions  = find_best_matching_topic(user_input)
         
         if best_match:
             session["topic"] = best_match  
@@ -81,6 +86,8 @@ def select_topic():
             page = wikipedia.page(best_match)
             create_chroma_index(page.content, best_match)
             return redirect(url_for("chat"))
+        elif suggestions:
+            return render_template("select_topic.html", suggestions=suggestions, saved_topics=saved_topics)
         else:
             return render_template("select_topic.html", error="No valid topic found", saved_topics=saved_topics)
 
