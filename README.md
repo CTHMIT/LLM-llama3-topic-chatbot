@@ -13,6 +13,8 @@ and use RAG to check the topic information.
 ![image](https://github.com/user-attachments/assets/f1cf1a69-54f8-409f-b100-14272b80adcb)
 - Review Chat History: The chat history is displayed during your conversation and stored locally for later reference.
 - End Session: You can clear the session and select a new topic at any time.
+## If there is no match to the topic or search information, there will be suggested options for the user to choose from.
+![image](https://github.com/user-attachments/assets/b0bb3fff-1f0f-445a-bf5c-30737dadd08f)
 
 ## Prerequisites
 
